@@ -45,7 +45,7 @@ export default function Auth() {
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotLoading, setForgotLoading] = useState(false);
 
-  const backendBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+  const backendBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
   const persistAuth = (response: any) => {
     const token = response.accessToken || response.token || (response as any).accessToken;
