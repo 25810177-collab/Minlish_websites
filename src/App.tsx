@@ -20,7 +20,7 @@ const Profile = lazy(() => import("@/pages/Profile"));
 const NotificationSettings = lazy(() => import("@/pages/NotificationSettings"));
 
 const queryClient = new QueryClient();
-
+console.log("API URL:", import.meta.env.VITE_API_URL);
 function PageFallback() {
   return (
     <div className="flex min-h-[40vh] items-center justify-center px-4 text-sm text-muted-foreground">
