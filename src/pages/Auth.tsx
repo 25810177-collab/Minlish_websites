@@ -67,35 +67,44 @@ export default function Auth() {
   };
 
   useEffect(() => {
-    const hashContent = location.hash?.startsWith('#')
-      ? location.hash.substring(1)
-      : location.hash;
-    const params = new URLSearchParams(hashContent || location.search);
-    const accessToken = params.get('accessToken');
-    const userId = params.get('userId');
-    const email = params.get('email');
-    const fullName = params.get('fullName') || params.get('name') || '';
-    const oauthError = params.get('error');
+    try {
+      const hashContent = location.hash?.startsWith('#')
+        ? location.hash.substring(1)
+        : location.hash;
+      const params = new URLSearchParams(hashContent || location.search);
+      const accessToken = params.get('accessToken');
+      const userId = params.get('userId');
+      const email = params.get('email');
+      const fullName = params.get('fullName') || params.get('name') || '';
+      const oauthError = params.get('error');
 
-    if (oauthError) {
-      toast.error('Đăng nhập Google thất bại, vui lòng thử lại.');
-      navigate(location.pathname, { replace: true });
-      return;
+      if (oauthError) {
+        window.history.replaceState(null, '', location.pathname);
+        toast.error('Đăng nhập Google thất bại, vui lòng thử lại.');
+        navigate(location.pathname, { replace: true });
+        return;
+      }
+
+      if (!accessToken) {
+        return;
+      }
+
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.removeItem('authToken');
+      localStorage.setItem('userId', userId || '');
+      localStorage.setItem('email', email || '');
+      localStorage.setItem('fullName', fullName || '');
+      sessionStorage.removeItem('oauth_return_to');
+
+      // Remove OAuth fragment from the address bar after persisting the session.
+      window.history.replaceState(null, '', location.pathname);
+
+      toast.success('Đăng nhập Google thành công!');
+      navigate(finalRedirectTo, { replace: true });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Không thể xử lý phản hồi đăng nhập Google';
+      toast.error(message);
     }
-
-    if (!accessToken) {
-      return;
-    }
-
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.removeItem('authToken');
-    localStorage.setItem('userId', userId || '');
-    localStorage.setItem('email', email || '');
-    localStorage.setItem('fullName', fullName || '');
-    sessionStorage.removeItem('oauth_return_to');
-
-    toast.success('Đăng nhập Google thành công!');
-    navigate(finalRedirectTo, { replace: true });
   }, [location.hash, location.pathname, location.search, navigate, finalRedirectTo]);
 
   // Khi chuyển sang trang khác hoặc đăng nhập thành công, reset dialog và lỗi
