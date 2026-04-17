@@ -205,29 +205,122 @@ export default function Navbar() {
         </div>
 
         {/* Mobile nav */}
-        <nav className="fixed bottom-0 left-0 right-0 z-50 flex border-t border-border bg-card md:hidden">
-          {[{ to: '/', label: 'Trang chủ', icon: Home }, { to: '/sets?tab=sets', label: 'Học', icon: BookOpen }, ...navItems].map(({ to, label, icon: Icon }) => (
-            <Link
-              key={to}
-              to={to}
-              className={`relative flex flex-1 flex-col items-center gap-1 py-3 text-xs font-medium transition-colors ${
-                (label === 'Học' ? pathname.startsWith('/sets') : pathname === to) ? 'text-primary' : 'text-muted-foreground'
-              }`}
-            >
-              <Icon className="h-5 w-5" />
-              {label}
-              {label === 'Thông báo' && unreadCount > 0 && (
-                <span className="absolute right-4 top-2 inline-flex min-w-[18px] items-center justify-center rounded-full bg-destructive px-1.5 py-0.5 text-[10px] font-semibold leading-none text-destructive-foreground">
-                  {unreadCount > 99 ? '99+' : unreadCount}
+        <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/70 bg-card/95 px-1 py-1.5 shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur md:hidden">
+          <div className="mx-auto grid w-full max-w-xl grid-cols-5 items-stretch gap-0.5">
+          {/* Trang chủ */}
+          <Link
+            to="/"
+            className={`relative flex flex-col items-center justify-center gap-1 rounded-xl py-2 text-[11px] font-semibold transition-all ${pathname === '/' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-primary/5 hover:text-primary'}`}
+            style={{ minWidth: 0 }}
+          >
+            <Home className="h-5 w-5 mb-0.5" />
+            <span className="truncate">Trang chủ</span>
+          </Link>
+
+          {/* Học - Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className={`relative flex w-full flex-col items-center justify-center gap-1 rounded-xl py-2 text-[11px] font-semibold transition-all ${pathname.startsWith('/sets') ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-primary/5 hover:text-primary'}`}
+                style={{ minWidth: 0 }}
+              >
+                <BookOpen className="h-5 w-5 mb-0.5" />
+                <span className="flex items-center gap-0.5 truncate">
+                  Học tập
+                  <ChevronDown className="h-3 w-3 ml-0.5" />
                 </span>
+                {dueReviewCount > 0 && (
+                  <span className="absolute right-2 top-1 inline-flex min-w-[16px] items-center justify-center rounded-full bg-destructive px-1 py-0.5 text-[10px] font-semibold leading-none text-destructive-foreground">
+                    {dueReviewCount > 99 ? '99+' : dueReviewCount}
+                  </span>
+                )}
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center" className="w-52 rounded-2xl border border-border/70 p-1.5 shadow-xl">
+              <DropdownMenuItem asChild className="rounded-xl px-3 py-2.5 hover:bg-primary/15 hover:text-primary focus:bg-primary/15 focus:text-primary data-[highlighted]:bg-primary/15 data-[highlighted]:text-primary">
+                <Link to="/sets?tab=sets" className="flex w-full items-center gap-2.5 text-sm">
+                  <BookOpen className="h-4 w-4" />
+                  <span>Bộ từ vựng</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="rounded-xl px-3 py-2.5 hover:bg-primary/15 hover:text-primary focus:bg-primary/15 focus:text-primary data-[highlighted]:bg-primary/15 data-[highlighted]:text-primary">
+                <Link to="/sets?tab=plan" className="flex w-full items-center gap-2.5 text-sm">
+                  <BarChart3 className="h-4 w-4" />
+                  <span>Kế hoạch học tập</span>
+                  {dueReviewCount > 0 && (
+                    <span className="ml-auto inline-flex min-w-[16px] items-center justify-center rounded-full bg-destructive px-1 py-0.5 text-[10px] font-semibold leading-none text-destructive-foreground">
+                      {dueReviewCount > 99 ? '99+' : dueReviewCount}
+                    </span>
+                  )}
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Tiến độ */}
+          <Link
+            to="/dashboard"
+            className={`relative flex flex-col items-center justify-center gap-1 rounded-xl py-2 text-[11px] font-semibold transition-all ${pathname === '/dashboard' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-primary/5 hover:text-primary'}`}
+            style={{ minWidth: 0 }}
+          >
+            <BarChart3 className="h-5 w-5 mb-0.5" />
+            <span className="truncate">Tiến độ</span>
+          </Link>
+
+          {/* Thông báo */}
+          <Link
+            to="/notifications"
+            className={`relative flex flex-col items-center justify-center gap-1 rounded-xl py-2 text-[11px] font-semibold transition-all ${pathname === '/notifications' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-primary/5 hover:text-primary'}`}
+            style={{ minWidth: 0 }}
+          >
+            <Bell className="h-5 w-5 mb-0.5" />
+            <span className="truncate">Thông báo</span>
+            {unreadCount > 0 && (
+              <span className="absolute right-2 top-1 inline-flex min-w-[16px] items-center justify-center rounded-full bg-destructive px-1 py-0.5 text-[10px] font-semibold leading-none text-destructive-foreground">
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            )}
+          </Link>
+
+          {/* Hồ sơ + Tài khoản */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className={`flex w-full flex-col items-center justify-center gap-1 rounded-xl py-2 text-[11px] font-semibold transition-all ${pathname === '/profile' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-primary/5 hover:text-primary'}`}
+                style={{ minWidth: 0 }}
+              >
+                <CircleUser className="h-5 w-5 mb-0.5" />
+                <span className="truncate">Hồ sơ</span>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-52 rounded-2xl border border-border/70 p-1.5 shadow-xl">
+              <DropdownMenuItem asChild className="rounded-xl px-3 py-2.5 hover:bg-primary/15 hover:text-primary focus:bg-primary/15 focus:text-primary data-[highlighted]:bg-primary/15 data-[highlighted]:text-primary">
+                <Link className="flex w-full items-center gap-2.5" to={showAccountActions ? '/profile' : '/auth'}>
+                  {showAccountActions ? (
+                    <>
+                      <CircleUser className="h-4 w-4" />
+                      <span>Hồ sơ</span>
+                    </>
+                  ) : (
+                    <>
+                      <LogIn className="h-4 w-4" />
+                      <span>Đăng nhập</span>
+                    </>
+                  )}
+                </Link>
+              </DropdownMenuItem>
+              {showAccountActions && (
+                <DropdownMenuItem
+                  className="cursor-pointer rounded-xl px-3 py-2.5 text-destructive hover:bg-destructive/10 focus:bg-destructive/10 data-[highlighted]:bg-destructive/10"
+                  onClick={handleSignOut}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Đăng xuất</span>
+                </DropdownMenuItem>
               )}
-              {label === 'Học' && dueReviewCount > 0 && (
-                <span className="absolute right-4 top-2 inline-flex min-w-[18px] items-center justify-center rounded-full bg-destructive px-1.5 py-0.5 text-[10px] font-semibold leading-none text-destructive-foreground">
-                  {dueReviewCount > 99 ? '99+' : dueReviewCount}
-                </span>
-              )}
-            </Link>
-          ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          </div>
         </nav>
       </div>
     </header>
