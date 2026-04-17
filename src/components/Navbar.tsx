@@ -8,8 +8,8 @@ import { getUnreadNotificationCount, getLearningPlan } from '@/lib/api';
 
 const navItems = [
   { to: '/dashboard', label: 'Tiến độ', icon: BarChart3 },
-  { to: '/profile', label: 'Hồ sơ', icon: CircleUser },
   { to: '/notifications', label: 'Thông báo', icon: Bell },
+  { to: '/profile', label: 'Hồ sơ', icon: CircleUser },
 ];
 
 export default function Navbar() {
